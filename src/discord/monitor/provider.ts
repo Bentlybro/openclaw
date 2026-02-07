@@ -594,6 +594,38 @@ export async function monitorDiscordProvider(opts: MonitorDiscordOpts = {}) {
   const gateway = client.getPlugin<GatewayPlugin>("gateway");
   if (gateway) {
     registerGateway(account.accountId, gateway);
+
+    // Set bot presence if configured
+    if (discordCfg.presence) {
+      const activityTypeMap: Record<string, number> = {
+        playing: 0,
+        streaming: 1,
+        listening: 2,
+        watching: 3,
+        custom: 4,
+        competing: 5,
+      };
+      const activityType = activityTypeMap[discordCfg.presence.activity?.type ?? "playing"] ?? 0;
+      const activities = discordCfg.presence.activity?.name
+        ? [
+            {
+              name: discordCfg.presence.activity.name,
+              type: activityType,
+              url: discordCfg.presence.activity.url ?? undefined,
+            },
+          ]
+        : [];
+      gateway.updatePresence({
+        since: null,
+        afk: false,
+        status: discordCfg.presence.status ?? "online",
+        activities,
+      });
+      const activityDesc = discordCfg.presence.activity?.name
+        ? `${discordCfg.presence.activity.type ?? "playing"} "${discordCfg.presence.activity.name}"`
+        : (discordCfg.presence.status ?? "online");
+      logger.info(`presence set: ${activityDesc}`);
+    }
   }
   const gatewayEmitter = getDiscordGatewayEmitter(gateway);
   const stopGatewayLogging = attachDiscordGatewayLogging({

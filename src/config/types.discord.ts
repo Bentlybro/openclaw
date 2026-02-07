@@ -86,6 +86,28 @@ export type DiscordIntentsConfig = {
   guildMembers?: boolean;
 };
 
+export type DiscordActivityType =
+  | "playing"
+  | "streaming"
+  | "listening"
+  | "watching"
+  | "competing"
+  | "custom";
+
+export type DiscordPresenceConfig = {
+  /** Bot status: online, dnd (do not disturb), idle, or invisible. Default: online. */
+  status?: "online" | "dnd" | "idle" | "invisible";
+  /** Activity to display (e.g., "Watching the stars"). */
+  activity?: {
+    /** Activity type. Default: playing. */
+    type?: DiscordActivityType;
+    /** Activity text (e.g., "the stars ⭐"). */
+    name?: string;
+    /** Streaming URL (only used with type: streaming). */
+    url?: string;
+  };
+};
+
 export type DiscordExecApprovalConfig = {
   /** Enable exec approval forwarding to Discord DMs. Default: false. */
   enabled?: boolean;
@@ -159,6 +181,8 @@ export type DiscordAccountConfig = {
   pluralkit?: DiscordPluralKitConfig;
   /** Outbound response prefix override for this channel/account. */
   responsePrefix?: string;
+  /** Bot presence/activity to set on connect (e.g., "Watching the stars"). */
+  presence?: DiscordPresenceConfig;
 };
 
 export type DiscordConfig = {
