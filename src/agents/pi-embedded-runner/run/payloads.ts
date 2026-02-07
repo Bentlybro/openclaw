@@ -211,7 +211,18 @@ export function buildEmbeddedRunPayloads(params: {
       errorLower.includes("must be") ||
       errorLower.includes("must have") ||
       errorLower.includes("needs") ||
-      errorLower.includes("requires");
+      errorLower.includes("requires") ||
+      // CLI/command errors that the model can learn from and retry
+      errorLower.includes("unknown flag") ||
+      errorLower.includes("unknown option") ||
+      errorLower.includes("unrecognized") ||
+      errorLower.includes("not recognized") ||
+      errorLower.includes("no such") ||
+      errorLower.includes("not found") ||
+      errorLower.includes("does not exist") ||
+      errorLower.includes("permission denied") ||
+      errorLower.includes("command not found") ||
+      errorLower.includes("syntax error");
 
     // Show tool errors only when:
     // 1. There's no user-facing reply AND the error is not recoverable
